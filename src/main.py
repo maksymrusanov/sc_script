@@ -8,8 +8,7 @@ import re
 from dotenv import load_dotenv
 import os
 
-# ==== Load SoundCloud likes ====
-soundclound_script
+#==== Load SoundCloud likes ====#
 url = 'https://soundcloud.com/tripple_death/likes'
 scroll_pause = 2
 max_tries_without_growth = 5
@@ -21,7 +20,6 @@ with webdriver.Chrome() as driver:
 
     last_height = driver.execute_script("return document.body.scrollHeight")
     tries = 0
-
     while tries < max_tries_without_growth:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(scroll_pause)
@@ -36,12 +34,12 @@ with webdriver.Chrome() as driver:
 
     print("Scrolling complete.")
 
-    with open('soundclound_script/html_res.html', 'w', encoding='utf-8') as f:
+    with open('html_res.html', 'w', encoding='utf-8') as f:
         f.write(driver.page_source)
 
 # ==== Parse saved HTML ====#
 
-with open('sc_parser/html_res.html', 'r', encoding='utf-8') as file:
+with open('html_res.html', 'r', encoding='utf-8') as file:
     html = file.read()
 
 soup = BeautifulSoup(html, 'html.parser')
@@ -55,7 +53,7 @@ for block in soup.find_all('li', class_='soundList__item'):
         title = title_tag.get_text(strip=True)
         tracks.append(f"{artist} - {title}")
 
-with open('sc_parser/tracks.txt', 'w', encoding='utf-8') as file:
+with open('tracks.txt', 'w', encoding='utf-8') as file:
     for track in tracks:
         file.write(track + '\n')
 
@@ -89,7 +87,7 @@ def clean_text(text):
 
 track_uris = []
 not_found=[]
-with open('sc_parser/tracks.txt', 'r', encoding='utf-8') as f:
+with open('tracks.txt', 'r', encoding='utf-8') as f:
     lines = [line.strip() for line in f if line.strip()]
 
 for line in lines:
@@ -113,8 +111,10 @@ for line in lines:
         track_uris.append(uri)
         print(f"✔ Found: {found_artist} – {found_title}")
     else:
-         not_found.append(f"{artist} - {title}")
-
+        not_found.append(f':{artist} - {title}')
+        
+tracks_text='tracks.txt'
+html_file='html_res.html'
 
 
 with open('not_found_tracks.txt', 'w') as file:
@@ -136,11 +136,13 @@ if track_uris:
     print("✅ All available tracks added.")
 else:
     print("⚠️ No tracks to add.")
-try:
-    # os.remove('soundclound_script/html_res.html')
-    os.remove('soundclound_script/tracks.txt')
-    print("file deleted .")
-except FileNotFoundError as ferorr:
-    print(f"file wasn`t found.{ferorr.filename}")
-except Exception as e:
-    print(f"Error: {e}")
+
+
+for file_path in [tracks_text, html_file]:
+    try:
+        os.remove(file_path)
+        print(f"{file_path} was removed.")
+    except FileNotFoundError:
+        print(f"{file_path} does not exist.")
+    except Exception as e:
+        print(f"Error removing {file_path}: {e}")

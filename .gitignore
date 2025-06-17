@@ -6,7 +6,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+not_found_tracks.txt
 # C extensions
 *.so
 
