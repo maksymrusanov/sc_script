@@ -38,7 +38,7 @@ source .venv/bin/activate
 ## install requirements
 pip install -r requirements.txt
 
-## enter your details(you will fnd them on spotify for developers )
+## enter your details(you will find them on spotify for developers )
 SPOTIPY_CLIENT_ID=your_client_id
 
 SPOTIPY_CLIENT_SECRET=your_client_secret
